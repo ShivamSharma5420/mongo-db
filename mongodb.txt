@@ -1,0 +1,101 @@
+//getting all the dbs present in the system
+>show dbs  
+---------------------------------------------------------------------------------------------------------------------------------------------------
+//creating db and using it
+>use test 
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+//creating collection
+>db.createCollection('testCollection')  
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+//for creating new collection(or using it if already created) and inserting one document on the go
+>db.newCollection.insertOne({name:"xyz",...})      
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+//for creating new collection(or using it if already created) and inserting many document on the go
+>db.newCollection.inertMany([{},{},{}])   
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+//for getting all the names of collections that are present in the current database
+>show collections         
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+//droppping collection
+>db.newCollection.drop()    
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+//dropping the current database
+>db.dropDatabase()          
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+//getting all the documents present in the current collection
+>db.testCollection.find()   
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+//getting all the documents present in the current collection in formatted way
+>db.testCollection.find().pretty()  
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+//getting all the documents in current collection whose name feilds have the value "shivam"  for more operators(https://docs.mongodb.com/manual/reference/operator/query/)
+>db.testCollection.find({name: {$eq:"shivam"}}) 
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+//getting all the documents in current collection whose name feilds have the value present in the given list 
+>db.testCollection.find({age: {$in:[val1,val2,val3]}})  
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+//And operation can be done as
+>db.inventory.find( { $and: [ { price: { $ne: 1.99 } }, { price: { $exists: true } } ] } ) 
+or
+//implicit AND operation
+>db.inventory.find( { price: { $ne: 1.99, $exists: true } } )  
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+//This query will select all documents where:
+//the qty field value is less than 10 or greater than 50, and
+//the sale field value is equal to true or the price field value is less than 5.
+>db.inventory.find( {
+    $and: [
+        { $or: [ { qty: { $lt : 10 } }, { qty : { $gt: 50 } } ] },
+        { $or: [ { sale: true }, { price : { $lt : 5 } } ] }
+    ]
+} )
+
+
+>db.collectionxyz.find({$and: [ {group: {$eq:"group1"}}, {age: {$lte:19}} ] }).pretty()
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+//i.e find function have two arguments one is find(queryselection, projection)
+
+db.collectionxyz.find(   {$and: [ {group: {$eq:"group1"}}, {age: {$lte:19}} ] },   {name:1}    ).pretty()  //name:1 means only project name field
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+//count the no. of documents returns
+db.collectionxyz.find().count()       //6 if 6 rows returns
+db.collectionxyz.find({ group:{$eq:"Alpha"} }, {name:1,_id:0}).count()    //returns the no. of docs that satisfies the query condition
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+//sort the returned result on some field
+db.collectionxyz.find().sort({age:1})                 //age:1 specified to sort in ascending order of age value, age:-1 for descending
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+//limit the no. of returned docs 
+db.collectionxyz.find().sort({age:1}).limit(2)                 //first sort the docs by age and take first two i.e. youngest two
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+//update:- add a new field
+//add a new column named dateOfJoining in those docs which have Alpha value in their group field
+// if field available already then it updates the value other wise create new field with the specified value
+db.collectionxyz.updateMany({group:"Alpha"},{$set: {dateOfJoining:"06/01/2021"}})   
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+//delete a document
+db.collectionxyz.deleteOne({name:"efg"})            //in delete we have to specify the query condition only
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+C-->insertOne({}), insertMany([{},{},{}...]), insert([{},{}...])
+R-->find({conditon},{fiels to project})
+U-->updateOne({codition},{set the new/exist field}), updateMany({codition}, {set the new/exist field})
+D-->deleteOne({condition}), deleteMany({condition})
